@@ -22,7 +22,12 @@ defmodule Account do
   end
 
   def handle_cast({:deposit, amount}, state) do
-    balance = Map.get(state, :balance)
-    {:noreply, Map.put(state, :balance, balance + amount)}
+    {_value, balance_with_deposit} =
+      Map.get_and_update(state, :balance, fn balance -> {balance, balance + amount} end)
+
+    {:noreply, balance_with_deposit}
+
+    # balance = Map.get(state, :balance)
+    # {:noreply, Map.put(state, :balance, balance + amount)}
   end
 end
