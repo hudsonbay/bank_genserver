@@ -13,7 +13,16 @@ defmodule Account do
     GenServer.call(pid, :get_balance)
   end
 
+  def deposit(pid, amount) do
+    GenServer.cast(pid, {:deposit, amount})
+  end
+
   def handle_call(:get_balance, _from, state) do
     {:reply, Map.get(state, :balance), state}
+  end
+
+  def handle_cast({:deposit, amount}, state) do
+    balance = Map.get(state, :balance)
+    {:noreply, Map.put(state, :balance, balance + amount)}
   end
 end
